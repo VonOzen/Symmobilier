@@ -4,9 +4,12 @@ namespace App\Entity;
 
 use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PropertyRepository")
+ * @UniqueEntity(fields="title", message="Un autre bien possède déjà ce titre")
  */
 class Property
 {
@@ -28,6 +31,7 @@ class Property
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(min=5, max=255, minMessage="Le titre doit faire au minimum 5 caractères", maxMessage="Le titre doit faire au maximum 255 caractères")
      */
     private $title;
 
@@ -38,26 +42,31 @@ class Property
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\Range(min="10", max="400", minMessage="Le bien doit faire au moins 10m²", maxMessage="Le bien doit faire au maximum 400m²")
      */
     private $surface;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\GreaterThanOrEqual(value=0, message="Le nombre de pièces doit être égal ou supérieur à 0")
      */
     private $rooms;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\GreaterThanOrEqual(value=0, message="Le nombre de chambres doit être égal ou supérieur à 0")
      */
     private $bedrooms;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\GreaterThanOrEqual(value=0, message="L'étage ne peut être négatif")
      */
     private $floor;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\GreaterThanOrEqual(value=0, message="Le prix ne peut être négatif")
      */
     private $price;
 
@@ -78,6 +87,7 @@ class Property
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Regex("/^[0-9]{5}$/")
      */
     private $postal_code;
 
