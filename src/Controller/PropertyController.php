@@ -4,27 +4,44 @@ namespace App\Controller;
 
 use App\Entity\Property;
 use App\Repository\PropertyRepository;
-use Doctrine\Common\Persistence\ObjectManager;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class PropertyController extends AbstractController
 {
+
+    /**
+     * @var PropertyRepository
+     */
+    private $repo;
+    
+    public function __construct(PropertyRepository $repo)
+    {
+        $this->repo    = $repo;
+    }
+
+
     /**
      * Query all the properties from database
      * 
      * @Route("/biens", name="property_index")
      * 
-     * @param ObjectManager $manager
-     * @param PropertyRepository $repo
+     * @param 
      * @return Response
      */
-    public function index(ObjectManager $manager, PropertyRepository $repo) : Response
+    public function index(PaginatorInterface $paginator, Request $request) : Response
     {
+        $properties = $paginator->paginate(
+            $this->repo->findAllVisibleQuery(),
+            $request->query->getInt('page', 1),
+            12
+        );
         return $this->render('property/index.html.twig', [
             'current_menu' => 'properties',
-            'properties'   => $repo->findAllVisible()
+            'properties'   => $properties
         ]);
     }
 

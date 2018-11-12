@@ -6,7 +6,19 @@
 
     <div class="container">
         <h1 class="display-4 my-5">Voir tous nos biens</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas fugiat assumenda illo natus sint dignissimos alias sed sunt excepturi quas.</p>
+        <hr>
+
+        <div class="row">
+            {% for property in properties %}
+                <div class="col-md-4">
+                    {% include 'property/_property.html.twig' %}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="pagination">
+            {{ knp_pagination_render(properties) }}
+        </div>
     </div>
 
 {% endblock %}
