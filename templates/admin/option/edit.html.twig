@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier l'option {{ option.name }}{% endblock %}
+
+{% block body %}
+
+<div class="container mt-4">
+
+  <h1 class="my-5">Modifier l'option <strong>{{ option.name }}</strong></h1>
+
+  {% include 'admin/option/_form.html.twig' with {'form': form, 'button': '<i class="fas fa-pen"></i> Modifier'} %}
+
+</div>
+
+{% endblock %}
