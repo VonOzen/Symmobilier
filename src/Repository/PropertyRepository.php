@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use Doctrine\ORM\Query;
 use App\Entity\Property;
+use App\Entity\PropertySearch;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -23,14 +24,26 @@ class PropertyRepository extends ServiceEntityRepository
 
     /**
      * Get the query for all unsold properties (pagination purpose)
+     * 
+     * @param PropertySearch $search
      *
      * @return Query
      */
-    public function findAllVisibleQuery() : Query
+    public function findAllVisibleQuery(PropertySearch $search) : Query
     {
-        return $this->findVisibleQuery()
-                    ->getQuery()
-        ;
+        $query = $this->findVisibleQuery();
+
+        if($search->getMaxPrice()) {
+            $query->andWhere('p.price <= :maxPrice')
+                  ->setParameter('maxPrice', $search->getMaxPrice());
+        }
+
+        if($search->getMinSurface()) {
+            $query->andWhere('p.surface >= :minSurface')
+                  ->setParameter('minSurface', $search->getMinSurface());
+        }
+
+        return $query->getQuery();
     }
 
     /**
