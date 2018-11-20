@@ -18,10 +18,29 @@ contactButton.click(function(e){
   e.preventDefault();
   $('#contactForm').slideDown();
   contactButton.slideUp();
-
 });
 
-// Need jQuery? Install it with "yarn add jquery", then uncomment to require it.
-// var $ = require('jquery');
 
-console.log('COUCOU');
+//Suppression des éléments pictures
+document.querySelectorAll('[data-delete]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    fetch(a.getAttribute('href'), {
+      method: 'DELETE',
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'Content-Type'    : 'application/json'
+      },
+      body: JSON.stringify({'_token': a.dataset.token})
+    }).then(reponse => reponse.json())
+      .then(data => {
+        if (data.success) {
+          a.parentNode.parentNode.removeChild(a.parentNode);
+        } else {
+          alert(data.error);
+        }
+      })
+      .catch(e => alert(e))
+  });
+  
+});

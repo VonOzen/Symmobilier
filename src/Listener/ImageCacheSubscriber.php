@@ -2,6 +2,7 @@
 
 namespace App\Listener;
 
+use App\Entity\Picture;
 use App\Entity\Property;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\PreFlushEventArgs;
@@ -47,7 +48,7 @@ class ImageCacheSubscriber implements EventSubscriber
   {
     $entity = $args->getEntity();
     
-    if (!$entity instanceof Property) {
+    if (!$entity instanceof Picture) {
       return;
     }
 
@@ -58,7 +59,7 @@ class ImageCacheSubscriber implements EventSubscriber
   {
     $entity = $args->getEntity();
 
-    if (!$entity instanceof Property) {
+    if (!$entity instanceof Picture) {
       return;
     }
 

@@ -41,10 +41,11 @@ class PropertyType extends AbstractType
                 ]
             )
             ->add(
-                'imageFile',
+                'pictureFiles',
                 FileType::class,
                 [
-                    'required' => false
+                    'required' => false,
+                    'multiple' => true
                 ]
             )
             ->add('city')

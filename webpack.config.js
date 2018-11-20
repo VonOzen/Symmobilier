@@ -37,6 +37,9 @@ Encore
     .enableSourceMaps(!Encore.isProduction())
     // enables hashed filenames (e.g. app.abc123.css)
     .enableVersioning(Encore.isProduction())
+    .configureBabel(function(babelConfig) {
+        babelConfig.presets.push('es2017')
+    })
 
     // enables Sass/SCSS support
     //.enableSassLoader()
