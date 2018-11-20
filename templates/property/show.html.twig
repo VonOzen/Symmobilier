@@ -36,8 +36,21 @@
           <h1 class="display-4 my-5">{{ property.title }}</h1>
           <h2>{{ property.rooms }} pièces - {{ property.surface }}m²</h2>
           <div class="text-dark" style="font-size: 3rem; font-weight: bold">{{ property.formattedPrice }} &euro;</div>
-          <a href="#" class="btn btn-success">Contacter l'agence</a>
-          <div id="contactForm" class="mt-4">
+          <a href="#" 
+             class="btn btn-success"
+             id="contactButton"  
+             {% if form.vars.submitted %}
+               style="display: none;"
+             {% endif %}
+             >
+             Contacter l'agence
+            </a>
+          <div id="contactForm" 
+               class="mt-4" 
+               {% if not form.vars.submitted %}
+                  style="display: none;"
+               {% endif %}
+                >
             {% include 'property/_contact-form.html.twig' %}
           </div>
         </div>
