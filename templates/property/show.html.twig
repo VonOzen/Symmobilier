@@ -5,7 +5,25 @@
 {% block body %}
 
   <div class="jumbotron">
-    <div class="container">    
+    <div class="container">
+
+      <!-- Flash messages -->
+        {% for label, messages in app.flashes %}
+        <div class="container mt-4">
+            <div class="alert alert-{{ label }}">
+                {% for message in messages %}
+                    {{ message | raw }}
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+
+        {% if not form.vars.valid %}
+          <div class="alert alert-danger">
+            Le message n'a pas pu être envoyé :c Veuillez vérifier les champs du formulaire de contact.
+          </div>
+        {% endif %}
+
       <div class="row">
         <div class="col-md-8">
         {% if property.fileName %}
@@ -19,6 +37,9 @@
           <h2>{{ property.rooms }} pièces - {{ property.surface }}m²</h2>
           <div class="text-dark" style="font-size: 3rem; font-weight: bold">{{ property.formattedPrice }} &euro;</div>
           <a href="#" class="btn btn-success">Contacter l'agence</a>
+          <div id="contactForm" class="mt-4">
+            {% include 'property/_contact-form.html.twig' %}
+          </div>
         </div>
       </div>
     </div>

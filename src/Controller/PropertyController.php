@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Contact;
 use App\Entity\Property;
+use App\Form\ContactType;
 use App\Entity\PropertySearch;
 use App\Form\PropertySearchType;
 use App\Repository\PropertyRepository;
@@ -11,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Notification\ContactNotification;
 
 class PropertyController extends AbstractController
 {
@@ -60,19 +63,44 @@ class PropertyController extends AbstractController
      * @param String $slug
      * @param Integer $id
      * @param Property $property
+     * @param Request $request
+     * @param ContactNotification $contactNotification
      * @return Response
      */
-    public function show(string $slug, Property $property): Response
+    public function show(string $slug, Property $property, Request $request, ContactNotification $contactNotification): Response
     {
+        
         if ($property->getSlug() !== $slug) {
             return $this->redirectToRoute('property_show', [
                 'id'   => $property->getId(),
                 'slug' => $property->getSlug()
             ], 301);
         }
+
+        $contact = new Contact();
+        $contact->setProperty($property);
+        $form = $this->createForm(ContactType::class, $contact);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            # Handle mail
+            $contactNotification->notify($contact);
+
+            $this->addFlash(
+                'success',
+                "Merci de votre message ! Nous vous recontacterons dès que possible !"
+            );
+
+            return $this->redirectToRoute('property_show', [
+                'id'   => $property->getId(),
+                'slug' => $property->getSlug()
+            ]);
+        }
+
         return $this->render('property/show.html.twig', [
             'current_menu' => 'properties',
-            'property'     => $property
+            'property'     => $property,
+            'form'         => $form->createView()
         ]);
     }
 }
